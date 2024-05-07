@@ -1,0 +1,44 @@
+// get maximum profit if you are given a prediction of stock prices for N days
+typedef int array_t [][];
+
+class trading;
+
+  function array_t get_max_profit(int list []);
+    bit done_flag;
+    int curr_ptr;
+    int nxt_ptr;
+
+    int min [$];
+    int max [$];
+    
+    get_max_profit = new[1];
+    get_max_profit[0] = '{list[0]};
+    curr_ptr = 0;
+    nxt_ptr = 1;
+    while (!done_flag) begin
+      low_val = list[curr_ptr];
+      high_val= list[nxt_ptr];
+
+      if ((low_val >= high_val) || (get_max_profit.size() && high_val < get_max_profit[transaction][get_max_profit.size()-1])) begin
+        curr_ptr = nxt_ptr;
+        nxt_ptr+=1;
+        transaction+=1;
+        get_max_profit = {get_max_profit[transaction], list[curr_ptr]};
+      end else begin
+        get_max_profit = {get_max_profit[transaction], list[nxt_ptr]};
+        nxt_ptr += 1;
+      end
+
+      if (curr_ptr >= get_max_profit.size() || nxt_ptr >= get_max_profit.size())
+        done_falg = 1;
+    end
+
+    foreach(get_max_profit[i,]) begin
+      if (get_max_profit[i].size() > 1) begin
+        min = get_max_profit[i].min();
+        max = get_max_profit[i].max();
+        return max.pop_front() - min.pop_front();
+      end
+    end
+  endfunction : get_max_profit
+endclass : trading
