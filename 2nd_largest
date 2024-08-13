@@ -1,0 +1,60 @@
+class smallest #(int SIZE = 3);
+
+  int min1, min2;
+  
+  rand int number [SIZE];
+    
+  constraint number_c {
+    foreach(number[i]) {
+      number[i] >= 0;
+      number[i] < 2**SIZE-1;
+    }
+  }
+  
+  function void post_randomize();
+    find_smallest();
+  endfunction : post_randomize
+    
+  function void find_smallest();
+    
+    if (number[0] > number[1]) begin
+      min1 = number[0];
+      min2 = number[1];
+    end else begin
+      min1 = number[1];
+      min2 = number[0];
+    end
+    
+    for (int i=2; i<SIZE; i++) begin
+      if (min1 <= number[i]) begin
+        min2 = min1;
+        min1 = number[i];
+      end else if (min2 <= number[i]) begin
+        min2 = number[i];
+      end
+    end
+    
+    print_smallest();
+  endfunction : find_smallest
+    
+  function void print_smallest();
+    number.sort();
+    number.reverse();
+    $display("sorted array %p",number);
+    $display("1st smallest number is %0d",min1);
+    $display("2nd smallest number is %0d",min2);   
+    if (min2 != number[1]) $fatal("algo is wrong");
+  endfunction : print_smallest
+endclass : smallest
+    
+module tb;
+  smallest #(10) s;
+  
+  initial begin
+    s = new();
+    
+    repeat(5) begin
+   	  s.randomize();
+    end
+  end
+endmodule : tb
