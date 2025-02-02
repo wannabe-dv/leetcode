@@ -1,0 +1,53 @@
+class knight_tour #(int M=5);
+  
+  rand int board[M*M];
+  rand int pre_board [M*M];
+  
+  rand int row [M*M];
+  rand int col [M*M];
+    
+  constraint rows_c {
+    foreach(row[i]) {
+      row[i] inside {[0:M-1]};
+      i > 0 -> row[i] != row[i-1];
+    }
+  }
+  
+  constraint cols_c {
+    foreach(col[i]) {
+      col[i] inside {[0:M-1]};
+      i > 0 -> col[i] != col[i-1];
+    }
+  }
+  
+  constraint moves_c {
+    foreach(pre_board[i]) {
+      i > 0 -> (row[i] > row[i-1] ? row[i] - row[i-1] : row[i-1] - row[i]) +
+      		   (col[i] > col[i-1] ? col[i] - col[i-1] : col[i-1] - col[i]) == 3;
+    }
+  }
+
+  constraint board_c {
+    unique {board};
+    foreach(board[i]) {
+      board[i] inside {[0:M*M-1]};
+      board[i] == row[i]*5 + col[i];
+    }
+    solve row,col before board;
+  }
+
+endclass : knight_tour
+
+module tb;
+  knight_tour #(5) k;
+
+  initial begin
+    k = new;
+    if (!k.randomize()) $fatal("Failed to randomize chess board");
+    foreach(k.board[i]) begin
+      if (i % 5 == 0 && i != 0)
+        $display("\n");
+      $display("%0d",k.board[i]);
+    end
+  end
+endmodule
